@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>aksara Gusti Translator</title>
+</head>
+
+<body>
+
+<h2>aksara Gusti Translator</h2>
+
+<textarea id="input" rows="6" cols="50"></textarea>
+<br><br>
+
+<button onclick="latinToGusti()">Latin → Gusti</button>
+<button onclick="gustiToLatin()">Gusti → Latin</button>
+
+<p id="output" style="direction: rtl; text-align: right;"></p>
+
+<script>
+
+// HURUF
+const latinToGustiMap = {
+  a:"ا", b:"ب", c:"ت", d:"ه", e:"آ", f:"ة", g:"ج",
+  h:"ح", i:"اِ", j:"خ", k:"ك", l:"ل", m:"م", n:"ن",
+  o:"اْ", p:"ئ",
+  q:"ظ", r:"ر", s:"س", t:"ش", u:"ز",
+  v:"زٌ", w:"و", x:"لاْ", y:"لا", z:"زِ",
+};
+
+// ANGKA
+const numberMap = {
+  "0":"٠","1":"١","2":"٢","3":"٣","4":"٤",
+  "5":"٥","6":"٦","7":"٧","8":"٨","9":"٩"
+};
+
+// REVERSE
+function reverseMap(obj){
+  let res = {};
+  for(let k in obj){
+    res[obj[k]] = k;
+  }
+  return res;
+}
+
+// LATIN → GUSTI
+function latinToGusti(){
+  let text = document.getElementById("input").value.toLowerCase();
+  let result = "";
+
+  for(let char of text){
+    if(!isNaN(char) && char !== " "){
+      result += numberMap[char] || char;
+    } else {
+      result += latinToGustiMap[char] || char;
+    }
+  }
+
+  document.getElementById("output").innerText = result;
+}
+
+// GUSTI → LATIN
+function gustiToLatin(){
+  let reverseLetters = reverseMap(latinToGustiMap);
+  let reverseNumbers = reverseMap(numberMap);
+
+  let text = document.getElementById("input").value;
+  let result = "";
+
+  let i = 0;
+  while(i < text.length){
+
+    let twoChar = text.substring(i, i+2);
+
+    if(reverseLetters[twoChar]){
+      result += reverseLetters[twoChar];
+      i += 2;
+      continue;
+    }
+
+    let char = text[i];
+
+    if(reverseNumbers[char]){
+      result += reverseNumbers[char];
+    }
+    else if(reverseLetters[char]){
+      result += reverseLetters[char];
+    }
+    else{
+      result += char;
+    }
+
+    i++;
+  }
+
+  document.getElementById("output").innerText = result;
+}
+
+</script>
+
+</body>
+</html>
